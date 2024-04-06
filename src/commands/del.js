@@ -7,10 +7,10 @@ module.exports = new Command({
 	requiredArguments: 1,
 }).setRun(async ({ arguments, handler }) => {
 	const projects = arguments.map(x => handler.projects.find(y => y.name.toLowerCase() === x.toLowerCase())).filter(x => !!x)
-	if (!projects.length) return 'No project with found';
+	if (!projects.length) return 'No project found';
 
 	const skip = arguments.includes('-y');
-	if (!skip) process.stdout.write(`Are you sure to delete ${projects.length} projects ? ? [y/n]\n>> `);
+	if (!skip) process.stdout.write(`Are you sure to delete ${projects.length} projects ? [y/n]\n>> `);
 	const rep = skip ? 'y' : await handler.waitInput();
 
 	if (rep?.toLowerCase() === 'y') {

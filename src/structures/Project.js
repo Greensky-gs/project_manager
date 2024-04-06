@@ -1,5 +1,5 @@
 const { join } = require('../utils/toolbox');
-const { copyFileSync, rm, existsSync } = require('node:fs')
+const { copyFileSync, rm, existsSync, rmdirSync } = require('node:fs')
 const configs = require('../utils/configs.json')
 
 module.exports.Project = class Project {
@@ -22,6 +22,12 @@ module.exports.Project = class Project {
 		return this.#info.main;
 	}
 
+	async clean() {
+		return new Promise(resolve => {
+			if (existsSync(join(this.#path, 'node_modules'))) return rm(join(this.#path, 'node_modules'), { recursive: true, force: true }, resolve)
+			resolve()
+		})
+	}
 	async remove() {
 		new Promise((resolve) => {
 			if (existsSync(join(this.#path, '.env'))) copyFileSync(join(this.#path, '.env'), join(configs.envDir, `${this.#info.name}-${this.#info.version}.env`))
