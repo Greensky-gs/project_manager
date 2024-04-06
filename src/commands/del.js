@@ -6,7 +6,7 @@ module.exports = new Command({
 	aliases: ['rm', 'rmv'],
 	requiredArguments: 1,
 }).setRun(async ({ arguments, handler }) => {
-	const projects = arguments.map(x => handler.projects.find(y => y.name.toLowerCase() === x.toLowerCase())).filter(x => !!x)
+	const projects = arguments[0] === '*' ? handler.projects : arguments.map(x => handler.projects.find(y => y.name.toLowerCase() === x.toLowerCase())).filter(x => !!x)
 	if (!projects.length) return 'No project found';
 
 	const skip = arguments.includes('-y');

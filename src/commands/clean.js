@@ -5,7 +5,7 @@ module.exports = new Command({
 	description: 'Remove node_modules folder from a project',
 	requiredArguments: 1,
 }).setRun(async ({ arguments, handler }) => {
-	const projects = arguments
+	const projects = arguments[0] === '*' ? handler.projects : arguments
 		.map((x) =>
 			handler.projects.find(
 				(y) => y.name.toLowerCase() === x.toLowerCase()
