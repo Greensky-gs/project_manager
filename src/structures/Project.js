@@ -1,6 +1,7 @@
-const { join } = require('../utils/toolbox');
+const { join, bar } = require('../utils/toolbox');
 const { copyFileSync, rm, existsSync, rmdirSync } = require('node:fs')
 const configs = require('../utils/configs.json')
+const hyperlink = require('hyperlinker')
 
 module.exports.Project = class Project {
 	#path;
@@ -14,7 +15,7 @@ module.exports.Project = class Project {
 
 	display(pad = 0) {
 		const cleaned = this.cleaned;
-		return `\x1b[${91 + +cleaned}m${this.name.padEnd(pad)} [ ${cleaned ? '  Clean  ' : 'Installed'} ]\x1b[0m`
+		return `\x1b[${91 + +cleaned}m${hyperlink(this.name, this.#path)}${bar(Math.max(0, pad - this.name.length), ' ')} [ ${cleaned ? '  Clean  ' : 'Installed'} ]\x1b[0m`
 	}
 	get name() {
 		return this.#info.name;

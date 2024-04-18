@@ -5,5 +5,8 @@
 	"license": "MIT",
 	"scripts": {
 		"start": "cls && node --no-warnings ."
+	},
+	"dependencies": {
+		"hyperlinker": "^1.0.0"
 	}
 }
