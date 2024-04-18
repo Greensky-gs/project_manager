@@ -7,17 +7,18 @@ module.exports = new Command({
 	requiredArguments: 0,
 	aliases: ['liste', 'list'],
 }).setRun(({ projects, arguments }) => {
-	const longestName =
-		projects.map((x) => x.name).sort((a, b) => b.length - a.length)[0]
-			.length + Math.round(process.stdout.columns * 0.3);
+	const longestDisplay =
+		projects.sort((a, b) => b.display() - a.display())[0]
+			.display().length + Math.round(process.stdout.columns * 0.3);
+	const longestName = projects.map(x => x.name).sort((a, b) => b.length - a.length)[0].length
 
 	return (
 		projects
 			.map(
 				(x) =>
 					`${bar(Math.round(process.stdout.columns * 0.08), ' ')}${
-						x.name
-					}${new Array(longestName - x.name.length)
+						x.display(longestName)
+					}${new Array(Math.round(longestDisplay * .7))
 						.fill(' ')
 						.join('')}v${x.version}`
 			)

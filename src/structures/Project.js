@@ -12,6 +12,10 @@ module.exports.Project = class Project {
 		this.load();
 	}
 
+	display(pad = 0) {
+		const cleaned = this.cleaned;
+		return `\x1b[${91 + +cleaned}m${this.name.padEnd(pad)} [ ${cleaned ? '  Clean  ' : 'Installed'} ]\x1b[0m`
+	}
 	get name() {
 		return this.#info.name;
 	}
@@ -20,6 +24,9 @@ module.exports.Project = class Project {
 	}
 	get main() {
 		return this.#info.main;
+	}
+	get cleaned() {
+		return !existsSync(join(this.#path, 'node_modules'))
 	}
 
 	async clean() {

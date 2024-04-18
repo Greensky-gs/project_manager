@@ -22,16 +22,10 @@ module.exports = new Command({
 	const rep = skip ? 'y' : await handler.waitInput();
 
 	if (rep?.toLowerCase() === 'y') {
-		projects.forEach(async (project) => {
-			await project.clean();
-
-			handler.projects.splice(
-				handler.projects.findIndex(
-					(x) => x.name.toLowerCase() === arguments[0].toLowerCase()
-				),
-				1
-			);
+		const map = projects.map(async (project) => {
+			return project.clean();
 		});
+		await Promise.all(map)
 
 		return `${projects.map((x) => x.name).join(', ')} have been cleaned`;
 	} else {
