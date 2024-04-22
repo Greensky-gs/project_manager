@@ -48,29 +48,32 @@ class Handler {
 				return;
 			}
 
-			const args = input.split(/ +/g);
-			const commandName = args.shift().toLowerCase();
+			const commands = input.split(/ *&& */g)
+            commands.forEach((input, index, array) => {
+				const args = input.split(/ +/g);
+				const commandName = args.shift().toLowerCase();
 
-			const cmd = this.findCommand(commandName)[0];
-			if (!cmd) {
-				console.log('No command found');
-				process.stdout.write('> ');
-				return;
-			}
+				const cmd = this.findCommand(commandName)[0];
+                if (!cmd) {
+                    console.log('No command found');
+                    process.stdout.write('> ');
+                    return;
+                }
 
-			if (args.length < cmd.meta.requiredArguments) {
-				console.log(
-					`${cmd.meta.name} required ${cmd.meta.requiredArguments}, but ${args.length} were given`
-				);
-				process.stdout.write('> ');
-				return;
-			}
+                if (args.length < cmd.meta.requiredArguments) {
+                    console.log(
+                        `${cmd.meta.name} required ${cmd.meta.requiredArguments}, but ${args.length} were given`
+                    );
+                    process.stdout.write('> ');
+                    return;
+                }
 
-			this.execCommand(commandName, {
-				projects: this.#projects,
-				arguments: args,
-				handler: this,
-			});
+                this.execCommand(commandName, {
+                    projects: this.#projects,
+                    arguments: args,
+                    handler: this,
+                }, index === array.length - 1);
+            });
 		});
 	}
 
@@ -81,14 +84,14 @@ class Handler {
 				x.meta.aliases.includes(name.toLowerCase())
 		);
 	}
-	async execCommand(name, args) {
+	async execCommand(name, args, last = false) {
 		const cmd = this.findCommand(name)[0];
 		if (!cmd) return;
 
 		const res = await cmd.run(args);
 		if (!!res) console.log(res);
 
-		process.stdout.write('> ');
+	 	if (last) process.stdout.write('> ');
 	}
 	get commands() {
 		return this.#commands;
