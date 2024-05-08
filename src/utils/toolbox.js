@@ -5,3 +5,8 @@ module.exports.center = (text) => {
 	const sep = new Array(Math.round(process.stdout.columns / 2) - mid).fill(' ').join('');
 	return `${sep}${text}${sep}`
 }
+module.exports.getArgument = (arguments, name, defaultValue) => {
+	const index = arguments.findIndex(x => x === name);
+	if (index === -1) return defaultValue;
+	return arguments[index + 1] ?? defaultValue;
+}

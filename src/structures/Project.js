@@ -1,5 +1,5 @@
 const { join, bar } = require('../utils/toolbox');
-const { copyFileSync, rm, existsSync, rmdirSync } = require('node:fs')
+const { copyFileSync, rm, existsSync, writeFileSync } = require('node:fs')
 const configs = require('../utils/configs.json')
 const hyperlink = require('hyperlinker')
 
@@ -38,6 +38,9 @@ module.exports.Project = class Project {
 	get fullPath() {
 		return this.#path.replace('../', 'E:/scripts/js/').replace(/\//g, '\\')
 	}
+	get isGit() {
+		return existsSync(join(this.#path, '.git'))
+	}
 
 	async clean() {
 		return new Promise(resolve => {
@@ -55,5 +58,6 @@ module.exports.Project = class Project {
 
 	load() {
 		this.#info = require(join('..', '..', this.#path, 'package.json'));
+		this.#info.dirName = this.#path.split('/').pop();
 	}
 };

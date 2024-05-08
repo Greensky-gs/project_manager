@@ -1,5 +1,5 @@
 const Command = require('../structures/Command');
-const { bar } = require('../utils/toolbox');
+const { bar, getArgument } = require('../utils/toolbox');
 
 module.exports = new Command({
 	name: 'ls',
@@ -7,13 +7,19 @@ module.exports = new Command({
 	requiredArguments: 0,
 	aliases: ['liste', 'list'],
 }).setRun(({ projects, arguments }) => {
-	const longestDisplay =
-		projects.sort((a, b) => b.display() - a.display())[0]
+	const gitIgnore = getArgument(arguments, '--gitignore', "none");
+
+	const selectionned = projects.filter(x => {
+		const gitIgnoring = gitIgnore === "none" ? true : gitIgnore === "git" ? x.isGit : gitIgnore === "ungit" ? !x.isGit : true;
+
+		return gitIgnoring
+	})
+	const longestDisplay = selectionned.sort((a, b) => b.display() - a.display())[0]
 			.display().length + Math.round(process.stdout.columns * 0.3);
-	const longestName = projects.map(x => x.name).sort((a, b) => b.length - a.length)[0].length
+	const longestName = selectionned.map(x => x.name).sort((a, b) => b.length - a.length)[0].length
 
 	return (
-		projects
+		selectionned
 			.map(
 				(x) =>
 					`${bar(Math.round(process.stdout.columns * 0.08), ' ')}${
@@ -23,6 +29,6 @@ module.exports = new Command({
 						.join('')}v${x.version}`
 			)
 			.join('\n') +
-		`\n\nTotal: ${projects.length.toLocaleString()} project(s)`
+		`\n\nTotal: ${selectionned.length.toLocaleString()} project(s)`
 	);
 });
