@@ -29,6 +29,9 @@ module.exports.Project = class Project {
 	get cleaned() {
 		return !existsSync(join(this.#path, 'node_modules'))
 	}
+	get path() {
+		return this.#path;
+	}
 
 	async clean() {
 		return new Promise(resolve => {
