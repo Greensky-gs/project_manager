@@ -32,6 +32,12 @@ module.exports.Project = class Project {
 	get path() {
 		return this.#path;
 	}
+	get info() {
+		return this.#info;
+	}
+	get fullPath() {
+		return this.#path.replace('../', 'E:/scripts/js/').replace(/\//g, '\\')
+	}
 
 	async clean() {
 		return new Promise(resolve => {

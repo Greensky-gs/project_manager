@@ -10,6 +10,5 @@ module.exports = new Command({
     const projectFound = projects.find(x => x.name.toLowerCase() === project.toLowerCase())
     if (!projectFound) return "Projet introuvable"
 
-    const path = projectFound.path.replace('../', 'E:/scripts/js/').replace(/\//g, '\\')
-    exec(`explorer ${path}`)
+    exec(`explorer ${projectFound.fullPath}`)
 })
